@@ -9,6 +9,8 @@
     <version>1.4.8</version>
 
     <name>InteractiveBooks</name>
+    <description>Create cool interactive books!</description>
+    <url>https://github.com/calumari/InteractiveBooks</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,11 +1,11 @@
-name: @name@
-main: @mainPackage@.@name@
-version: @version@
-api-version: @apiVersion@
-description: @description@
-author: @author@
-website: @website@
-softdepend: [PlaceholderAPI]
+name: ${name}
+main: net.leonardo_dgs.interactivebooks.InteractiveBooks
+version: ${version}
+api-version: 1.15
+description: ${description}
+author: "Leonardo_DGS"
+website: ${url}
+softdepend: [PlaceholderAPI, helper]
 commands:
   ibooks:
     description: Command to manage books
