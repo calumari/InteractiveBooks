@@ -240,6 +240,8 @@ public class BooksUtils {
                 return new ClickEvent(ClickEvent.Action.OPEN_URL, value);
             case CHANGE_PAGE:
                 return new ClickEvent(ClickEvent.Action.CHANGE_PAGE, value);
+            case COPY_TO_CLIPBOARD:
+                return new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, value);
         }
         return null;
     }

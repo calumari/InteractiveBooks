@@ -9,7 +9,8 @@ enum BookEventActionType {
     RUN_COMMAND("run command", "command", "cmd"),
     SUGGEST_COMMAND("suggest command", "suggest cmd", "suggest"),
     OPEN_URL("open url", "url", "link"),
-    CHANGE_PAGE("change page");
+    CHANGE_PAGE("change page"),
+    COPY_TO_CLIPBOARD("copy");
 
     static BookEventActionType parse(String type)
     {
