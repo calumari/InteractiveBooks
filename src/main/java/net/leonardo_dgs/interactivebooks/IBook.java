@@ -148,7 +148,7 @@ public class IBook {
      */
     public void open(Player player)
     {
-        Players.openBook(this.getItem(player), player);
+        player.openBook(this.getItem(player));
     }
 
     /**
