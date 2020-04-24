@@ -42,7 +42,7 @@ public class BooksUtils {
         Method chatSerializerA;
         try
         {
-            chatSerializerA = ServerReflection.getMethod(ServerReflection.nmsClass("IChatBaseComponent").getClasses()[0], "a", String.class);
+            chatSerializerA = getMethod(ServerReflection.nmsClass("IChatBaseComponent").getClasses()[0], "a", String.class);
         }
         catch (ClassNotFoundException e)
         {
@@ -61,6 +61,14 @@ public class BooksUtils {
             fieldPages = null;
         }
         FIELD_PAGES = fieldPages;
+    }
+
+    private static Method getMethod(Class<?> clazz, String name, Class<?>... args) {
+        try {
+            return clazz.getMethod(name, args);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static BookMeta getBookMeta(BookMeta meta, List<String> rawPages, Player player)
