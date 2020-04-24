@@ -1,6 +1,5 @@
 package net.leonardo_dgs.interactivebooks;
 
-import org.bstats.bukkit.MetricsLite;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,7 +20,6 @@ public final class InteractiveBooks extends JavaPlugin {
         Config.loadAll();
         registerCommand();
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        new MetricsLite(this);
     }
 
     @Override
