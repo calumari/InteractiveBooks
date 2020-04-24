@@ -35,7 +35,7 @@ public final class PlayerListener implements Listener {
             openBookId = InteractiveBooks.getInstance().getConfig().getString("open_book_on_first_join");
             booksToGiveIds = InteractiveBooks.getInstance().getConfig().getStringList("books_on_first_join");
         }
-        if (!Objects.equals(openBookId, "") && InteractiveBooks.getBook(openBookId) != null)
+        if (!Objects.equals(openBookId, "") && InteractiveBooks.getBook(openBookId) != null && event.getPlayer().hasPermission("interactivebooks.open." + openBookId))
         {
             if (MinecraftVersion.getRuntimeVersion().isBefore(MinecraftVersion.of(1, 14, 0)))
                 Bukkit.getScheduler().runTask(InteractiveBooks.getInstance(), () -> InteractiveBooks.getBook(openBookId).open(event.getPlayer()));
