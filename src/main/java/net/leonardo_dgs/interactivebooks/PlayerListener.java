@@ -16,11 +16,19 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Objects;
 
 public final class PlayerListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    private static final boolean MC_AFTER_1_14;
+
+    static
+    {
+        MinecraftVersion runningVersion = MinecraftVersion.getRuntimeVersion();
+        MinecraftVersion v1_14 = MinecraftVersion.parse("1.14");
+        MC_AFTER_1_14 = runningVersion.equals(v1_14) || runningVersion.isAfter(v1_14);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         String openBookId;
@@ -35,18 +43,23 @@ public final class PlayerListener implements Listener {
             openBookId = InteractiveBooks.getInstance().getConfig().getString("open_book_on_first_join");
             booksToGiveIds = InteractiveBooks.getInstance().getConfig().getStringList("books_on_first_join");
         }
-        if (!Objects.equals(openBookId, "") && InteractiveBooks.getBook(openBookId) != null && event.getPlayer().hasPermission("interactivebooks.open." + openBookId))
+        if (openBookId != null && InteractiveBooks.getBook(openBookId) != null && event.getPlayer().hasPermission("interactivebooks.open." + openBookId))
         {
-            if (MinecraftVersion.getRuntimeVersion().isBefore(MinecraftVersion.of(1, 14, 0)))
-                Bukkit.getScheduler().runTask(InteractiveBooks.getInstance(), () -> InteractiveBooks.getBook(openBookId).open(event.getPlayer()));
-            else
-                InteractiveBooks.getBook(openBookId).open(event.getPlayer());
+            IBook book = InteractiveBooks.getBook(openBookId);
+            if (book != null)
+            {
+                if(MC_AFTER_1_14)
+                    book.open(event.getPlayer());
+                else
+                    Bukkit.getScheduler().runTask(InteractiveBooks.getInstance(), () -> book.open(event.getPlayer()));
+            }
         }
 
         booksToGiveIds.forEach(id ->
         {
-            if (InteractiveBooks.getBook(id) != null)
-                event.getPlayer().getInventory().addItem(InteractiveBooks.getBook(id).getItem(event.getPlayer()));
+            IBook book = InteractiveBooks.getBook(id);
+            if (book != null)
+                event.getPlayer().getInventory().addItem(book.getItem(event.getPlayer()));
         });
     }
 
