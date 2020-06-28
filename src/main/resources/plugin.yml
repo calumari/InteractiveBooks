@@ -5,9 +5,5 @@ api-version: 1.16
 description: ${description}
 authors: ["Leonardo_DGS", "calumari"]
 website: ${url}
-softdepend: [PlaceholderAPI, helper]
-commands:
-  ibooks:
-    description: Command to manage books
-    permission: interactivebooks.command
-    aliases: [interactivebooks, ib]
+depend: [helper]
+softdepend: [PlaceholderAPI]
