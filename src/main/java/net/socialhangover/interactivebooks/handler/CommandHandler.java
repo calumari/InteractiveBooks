@@ -57,9 +57,16 @@ public class CommandHandler implements TerminableModule {
                         return;
                     }
 
+                    CommandSender sender = c.sender();
+
                     if (root.equalsIgnoreCase("open")) {
-                        if (!(c.sender() instanceof Player)) {
+                        if (!(sender instanceof Player)) {
                             c.reply("you must be a player to run this command"); // todo locale
+                            return;
+                        }
+
+                        if (!sender.hasPermission("interactivebooks.command.open")) {
+                            c.reply("you lack permission to use this command ):"); // todo locale
                             return;
                         }
 
@@ -73,10 +80,15 @@ public class CommandHandler implements TerminableModule {
                             c.reply("missing book"); // todo locale
                             return;
                         }
-                        book.open((Player) c.sender());
+                        book.open((Player) sender);
                     }
 
                     if (root.equalsIgnoreCase("create")) {
+                        if (!sender.hasPermission("interactivebooks.command.create")) {
+                            c.reply("you lack permission to use this command ):"); // todo locale
+                            return;
+                        }
+
                         String name = c.arg(1).parse(String.class).orElse(null);
                         if (name == null) {
                             c.reply("missing filename"); // todo locale
@@ -91,6 +103,11 @@ public class CommandHandler implements TerminableModule {
                     }
 
                     if (root.equalsIgnoreCase("give")) {
+                        if (!sender.hasPermission("interactivebooks.command.give")) {
+                            c.reply("you lack permission to use this command ):"); // todo locale
+                            return;
+                        }
+
                         Player player = c.arg(1).parseOrFail(Player.class);
                         String name = c.arg(2).parse(String.class).orElse(null);
                         if (name == null) {
@@ -107,6 +124,11 @@ public class CommandHandler implements TerminableModule {
                     }
 
                     if (root.equalsIgnoreCase("reload")) {
+                        if (!sender.hasPermission("interactivebooks.command.reload")) {
+                            c.reply("you lack permission to use this command ):"); // todo locale
+                            return;
+                        }
+
                         plugin.reload();
                         c.reply("plugin reloaded :)");
                     }
