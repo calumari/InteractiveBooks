@@ -2,8 +2,12 @@ package net.socialhangover.interactivebooks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -16,7 +20,7 @@ public final class InteractiveBooks extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        Config.loadAll();
+        loadAll();
         registerCommand();
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
     }
@@ -75,8 +79,32 @@ public final class InteractiveBooks extends JavaPlugin {
 
     private void registerCommand() {
         PluginCommand commandIBooks = getCommand("ibooks");
-        Objects.requireNonNull(commandIBooks).setExecutor(new CommandIBooks());
+        Objects.requireNonNull(commandIBooks).setExecutor(new CommandIBooks(this));
         commandIBooks.setTabCompleter(new TabCompleterIBooks());
+    }
+
+    static void loadAll() {
+        InteractiveBooks.getInstance().saveDefaultConfig();
+        InteractiveBooks.getInstance().reloadConfig();
+        File f = new File(InteractiveBooks.getInstance().getDataFolder(), "books");
+        if (!f.exists()) {
+            try {
+                if (!f.mkdirs())
+                    throw new IOException();
+                Files.copy(Objects.requireNonNull(InteractiveBooks.getInstance().getResource("examplebook.yml")), new File(f, "examplebook.yml").toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        loadBookConfigs();
+    }
+
+    private static void loadBookConfigs() {
+        InteractiveBooks.getBooks().keySet().forEach(InteractiveBooks::unregisterBook);
+        File booksFolder = new File(InteractiveBooks.getInstance().getDataFolder(), "books");
+        for (File f : Objects.requireNonNull(booksFolder.listFiles()))
+            if (f.getName().endsWith(".yml"))
+                InteractiveBooks.registerBook(new IBook(f.getName().substring(0, f.getName().length() - 4), YamlConfiguration.loadConfiguration(f)));
     }
 
 }

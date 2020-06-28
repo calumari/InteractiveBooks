@@ -1,5 +1,6 @@
 package net.socialhangover.interactivebooks;
 
+import lombok.RequiredArgsConstructor;
 import me.lucko.helper.text.Text;
 import net.socialhangover.interactivebooks.util.BooksUtils;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
+@RequiredArgsConstructor
 public final class CommandIBooks implements CommandExecutor {
 
     private static final String helpMessage =
@@ -22,6 +24,8 @@ public final class CommandIBooks implements CommandExecutor {
                     // WIP: Book importing
                     // + "§e/ibooks import <book-id>\n"
                     + "§e/ibooks reload";
+
+    private final InteractiveBooks plugin;
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -180,7 +184,7 @@ public final class CommandIBooks implements CommandExecutor {
                     sender.sendMessage("§4You don't have permission to execute this action.");
                     return false;
                 }
-                Config.loadAll();
+                plugin.loadAll();
                 sender.sendMessage("§aConfig reloaded!");
                 break;
 
