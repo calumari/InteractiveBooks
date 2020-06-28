@@ -25,7 +25,7 @@ public final class CommandIBooks implements CommandExecutor {
                     // + "§e/ibooks import <book-id>\n"
                     + "§e/ibooks reload";
 
-    private final InteractiveBooks plugin;
+    private final InteractiveBooksPlugin plugin;
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
@@ -41,7 +41,7 @@ public final class CommandIBooks implements CommandExecutor {
                     return false;
                 }
                 StringBuilder sb = new StringBuilder();
-                for (IBook book : InteractiveBooks.getBooks().values())
+                for (IBook book : InteractiveBooksPlugin.getBooks().values())
                     sb.append("§6%book_id%§7, ".replace("%book_id%", book.getId()));
                 sender.sendMessage("§eBooks:\n" + (sb.toString().equals("") ? "" : sb.toString().substring(0, sb.toString().length() - 2)));
                 break;
@@ -61,7 +61,7 @@ public final class CommandIBooks implements CommandExecutor {
                 }
                 Player playerToOpen = args.length == 2 ? (Player) sender : Bukkit.getPlayer(args[2]);
                 String bookIdToOpen = Text.setPlaceholders(playerToOpen, args[1]);
-                if (InteractiveBooks.getBook(bookIdToOpen) == null) {
+                if (InteractiveBooksPlugin.getBook(bookIdToOpen) == null) {
                     sender.sendMessage("§cThat book doesn't exists.");
                     return false;
                 }
@@ -69,7 +69,7 @@ public final class CommandIBooks implements CommandExecutor {
                     sender.sendMessage("§cThat player isn't connected.");
                     return false;
                 }
-                InteractiveBooks.getBook(bookIdToOpen).open(playerToOpen);
+                InteractiveBooksPlugin.getBook(bookIdToOpen).open(playerToOpen);
                 if (!playerToOpen.equals(sender))
                     sender.sendMessage("§aBook §6%book_id% §aopened to §6%player%§a.".replace("%book_id%", bookIdToOpen).replace("%player%", args[2]));
                 break;
@@ -89,11 +89,11 @@ public final class CommandIBooks implements CommandExecutor {
                 }
                 Player playerToGet = (Player) sender;
                 String bookIdToGet = Text.setPlaceholders(playerToGet, args[1]);
-                if (InteractiveBooks.getBook(bookIdToGet) == null) {
+                if (InteractiveBooksPlugin.getBook(bookIdToGet) == null) {
                     sender.sendMessage("§cThat book doesn't exists.");
                     return false;
                 }
-                playerToGet.getInventory().addItem(InteractiveBooks.getBook(bookIdToGet).getItem(playerToGet));
+                playerToGet.getInventory().addItem(InteractiveBooksPlugin.getBook(bookIdToGet).getItem(playerToGet));
                 sender.sendMessage("§aYou have received the book §6%book_id%§a.".replace("%book_id%", bookIdToGet));
                 break;
 
@@ -108,7 +108,7 @@ public final class CommandIBooks implements CommandExecutor {
                 }
                 Player playerToGive = Bukkit.getPlayer(args[2]);
                 String bookIdToGive = Text.setPlaceholders(playerToGive, args[1]);
-                if (InteractiveBooks.getBook(bookIdToGive) == null) {
+                if (InteractiveBooksPlugin.getBook(bookIdToGive) == null) {
                     sender.sendMessage("§cThat book doesn't exists.");
                     return false;
                 }
@@ -116,7 +116,7 @@ public final class CommandIBooks implements CommandExecutor {
                     sender.sendMessage("§cThat player isn't connected.");
                     return false;
                 }
-                playerToGive.getInventory().addItem(InteractiveBooks.getBook(bookIdToGive).getItem(playerToGive));
+                playerToGive.getInventory().addItem(InteractiveBooksPlugin.getBook(bookIdToGive).getItem(playerToGive));
                 sender.sendMessage("§aBook §6%book_id% §agiven to §6%player%§a.".replace("%book_id%", bookIdToGive).replace("%player%", args[2]));
                 playerToGive.sendMessage("§aYou have received the book §6%book_id%§a.".replace("%book_id%", bookIdToGive));
                 break;
@@ -130,7 +130,7 @@ public final class CommandIBooks implements CommandExecutor {
                     sender.sendMessage("§cUsage: §7/ibooks create <book-id> <name> <title> <author> [generation]");
                     return false;
                 }
-                if (InteractiveBooks.getBook(args[1]) != null) {
+                if (InteractiveBooksPlugin.getBook(args[1]) != null) {
                     sender.sendMessage("§cA book with that id already exists");
                     return false;
                 }
@@ -149,7 +149,7 @@ public final class CommandIBooks implements CommandExecutor {
 
                 IBook createdBook = new IBook(bookId, bookName, bookTitle, bookAuthor, bookGeneration, new ArrayList<>(), new ArrayList<>());
                 createdBook.save();
-                InteractiveBooks.registerBook(createdBook);
+                InteractiveBooksPlugin.registerBook(createdBook);
                 sender.sendMessage("§aBook successfully created.");
                 break;
             // WIP: Book importing

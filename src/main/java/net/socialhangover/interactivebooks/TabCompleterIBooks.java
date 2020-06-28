@@ -30,7 +30,7 @@ public final class TabCompleterIBooks implements TabCompleter {
             if (args.length == 1) {
                 completions.add("open");
             } else if (args.length == 2) {
-                Set<String> bookCompletions = InteractiveBooks.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
+                Set<String> bookCompletions = InteractiveBooksPlugin.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
                 completions.addAll(bookCompletions);
             } else if (args.length == 3) {
                 Set<Player> players = Bukkit.getOnlinePlayers().stream().filter(completionPlayer -> completionPlayer.getName().toLowerCase().startsWith(args[2].toLowerCase())).collect(Collectors.toSet());
@@ -45,7 +45,7 @@ public final class TabCompleterIBooks implements TabCompleter {
             if (args.length == 1) {
                 completions.add("get");
             } else if (args.length == 2) {
-                Set<String> bookCompletions = InteractiveBooks.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
+                Set<String> bookCompletions = InteractiveBooksPlugin.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
                 completions.addAll(bookCompletions);
             }
         }
@@ -53,7 +53,7 @@ public final class TabCompleterIBooks implements TabCompleter {
             if (args.length == 1) {
                 completions.add("give");
             } else if (args.length == 2) {
-                Set<String> bookCompletions = InteractiveBooks.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
+                Set<String> bookCompletions = InteractiveBooksPlugin.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
                 completions.addAll(bookCompletions);
             } else if (args.length == 3) {
                 Set<Player> players = Bukkit.getOnlinePlayers().stream().filter(completionPlayer -> completionPlayer.getName().toLowerCase().startsWith(args[2].toLowerCase())).collect(Collectors.toSet());

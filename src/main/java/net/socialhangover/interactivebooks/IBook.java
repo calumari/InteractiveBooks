@@ -229,7 +229,7 @@ public class IBook {
      * Saves this book to his config file.
      */
     public void save() {
-        File file = new File(new File(InteractiveBooks.getInstance().getDataFolder(), "books"), getId() + ".yml");
+        File file = new File(new File(InteractiveBooksPlugin.getInstance().getDataFolder(), "books"), getId() + ".yml");
         BookMeta meta = bookMeta;
         try {
             if (!file.exists())

@@ -30,24 +30,24 @@ public class PlayerListener implements TerminableModule {
                     String openBookId;
                     List<String> booksToGiveIds;
                     if (e.getPlayer().hasPlayedBefore()) {
-                        openBookId = InteractiveBooks.getInstance().getConfig().getString("open_book_on_join");
-                        booksToGiveIds = InteractiveBooks.getInstance().getConfig().getStringList("books_on_join");
+                        openBookId = InteractiveBooksPlugin.getInstance().getConfig().getString("open_book_on_join");
+                        booksToGiveIds = InteractiveBooksPlugin.getInstance().getConfig().getStringList("books_on_join");
                     } else {
-                        openBookId = InteractiveBooks.getInstance().getConfig().getString("open_book_on_first_join");
-                        booksToGiveIds = InteractiveBooks.getInstance().getConfig().getStringList("books_on_first_join");
+                        openBookId = InteractiveBooksPlugin.getInstance().getConfig().getString("open_book_on_first_join");
+                        booksToGiveIds = InteractiveBooksPlugin.getInstance().getConfig().getStringList("books_on_first_join");
                     }
-                    if (openBookId != null && InteractiveBooks.getBook(openBookId) != null && e.getPlayer().hasPermission("interactivebooks.open." + openBookId)) {
-                        IBook book = InteractiveBooks.getBook(openBookId);
+                    if (openBookId != null && InteractiveBooksPlugin.getBook(openBookId) != null && e.getPlayer().hasPermission("interactivebooks.open." + openBookId)) {
+                        IBook book = InteractiveBooksPlugin.getBook(openBookId);
                         if (book != null) {
                             if (MC_AFTER_1_14)
                                 book.open(e.getPlayer());
                             else
-                                Bukkit.getScheduler().runTask(InteractiveBooks.getInstance(), () -> book.open(e.getPlayer()));
+                                Bukkit.getScheduler().runTask(InteractiveBooksPlugin.getInstance(), () -> book.open(e.getPlayer()));
                         }
                     }
 
                     booksToGiveIds.forEach(id -> {
-                        IBook book = InteractiveBooks.getBook(id);
+                        IBook book = InteractiveBooksPlugin.getBook(id);
                         if (book != null)
                             e.getPlayer().getInventory().addItem(book.getItem(e.getPlayer()));
                     });
@@ -60,14 +60,14 @@ public class PlayerListener implements TerminableModule {
                         return;
                     if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
                         return;
-                    if (!InteractiveBooks.getInstance().getConfig().getBoolean("update_books_on_use"))
+                    if (!InteractiveBooksPlugin.getInstance().getConfig().getBoolean("update_books_on_use"))
                         return;
                     if (!BooksUtils.getItemInMainHand(e.getPlayer()).getType().equals(Material.WRITTEN_BOOK))
                         return;
                     NBTItem nbti = new NBTItem(BooksUtils.getItemInMainHand(e.getPlayer()));
                     if (!nbti.hasKey("InteractiveBooks|Book-Id"))
                         return;
-                    IBook book = InteractiveBooks.getBook(nbti.getString("InteractiveBooks|Book-Id"));
+                    IBook book = InteractiveBooksPlugin.getBook(nbti.getString("InteractiveBooks|Book-Id"));
                     if (book == null)
                         return;
                     ItemStack bookItem = book.getItem(e.getPlayer());
@@ -80,7 +80,7 @@ public class PlayerListener implements TerminableModule {
                 .handler(e -> {
                     String command = e.getMessage().split(" ", 2)[0].replaceFirst("/", "").toLowerCase();
                     IBook iBook = null;
-                    for (IBook book : InteractiveBooks.getBooks().values())
+                    for (IBook book : InteractiveBooksPlugin.getBooks().values())
                         if (book.getOpenCommands().contains(command)) {
                             iBook = book;
                             break;

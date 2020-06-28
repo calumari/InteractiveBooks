@@ -1,5 +1,5 @@
 name: ${name}
-main: net.leonardo_dgs.interactivebooks.InteractiveBooks
+main: net.socialhangover.net.InteractiveBooksPlugin
 version: ${version}
 api-version: 1.16
 description: ${description}

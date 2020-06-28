@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public final class InteractiveBooks extends ExtendedJavaPlugin {
+public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
 
-    private static InteractiveBooks instance;
+    private static InteractiveBooksPlugin instance;
     private static final Map<String, IBook> books = new HashMap<>();
 
     @Override
@@ -35,7 +35,7 @@ public final class InteractiveBooks extends ExtendedJavaPlugin {
      * @return an instance of the plugin
      */
     @Deprecated
-    public static InteractiveBooks getInstance() {
+    public static InteractiveBooksPlugin getInstance() {
         return instance;
     }
 
@@ -84,14 +84,14 @@ public final class InteractiveBooks extends ExtendedJavaPlugin {
     }
 
     static void loadAll() {
-        InteractiveBooks.getInstance().saveDefaultConfig();
-        InteractiveBooks.getInstance().reloadConfig();
-        File f = new File(InteractiveBooks.getInstance().getDataFolder(), "books");
+        InteractiveBooksPlugin.getInstance().saveDefaultConfig();
+        InteractiveBooksPlugin.getInstance().reloadConfig();
+        File f = new File(InteractiveBooksPlugin.getInstance().getDataFolder(), "books");
         if (!f.exists()) {
             try {
                 if (!f.mkdirs())
                     throw new IOException();
-                Files.copy(Objects.requireNonNull(InteractiveBooks.getInstance().getResource("examplebook.yml")), new File(f, "examplebook.yml").toPath());
+                Files.copy(Objects.requireNonNull(InteractiveBooksPlugin.getInstance().getResource("examplebook.yml")), new File(f, "examplebook.yml").toPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -100,11 +100,10 @@ public final class InteractiveBooks extends ExtendedJavaPlugin {
     }
 
     private static void loadBookConfigs() {
-        InteractiveBooks.getBooks().keySet().forEach(InteractiveBooks::unregisterBook);
-        File booksFolder = new File(InteractiveBooks.getInstance().getDataFolder(), "books");
+        InteractiveBooksPlugin.getBooks().keySet().forEach(InteractiveBooksPlugin::unregisterBook);
+        File booksFolder = new File(InteractiveBooksPlugin.getInstance().getDataFolder(), "books");
         for (File f : Objects.requireNonNull(booksFolder.listFiles()))
             if (f.getName().endsWith(".yml"))
-                InteractiveBooks.registerBook(new IBook(f.getName().substring(0, f.getName().length() - 4), YamlConfiguration.loadConfiguration(f)));
+                InteractiveBooksPlugin.registerBook(new IBook(f.getName().substring(0, f.getName().length() - 4), YamlConfiguration.loadConfiguration(f)));
     }
-
 }
