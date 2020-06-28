@@ -40,9 +40,9 @@ public class PlayerListener implements TerminableModule {
                         booksToGiveIds = plugin.getConfig().getStringList("books-on-first-join");
                     }
 
-                    if (openBookId != null && plugin.getBook(openBookId) != null && player.hasPermission("interactivebooks.open." + openBookId)) {
+                    if (openBookId != null && plugin.getBook(openBookId) != null) {
                         IBook book = plugin.getBook(openBookId);
-                        if (book != null) {
+                        if (book != null && book.hasPermission(player)) {
                             book.open(player);
                         }
                     }

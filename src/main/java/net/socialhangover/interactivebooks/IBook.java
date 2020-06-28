@@ -89,6 +89,6 @@ public class IBook {
     }
 
     public boolean hasPermission(CommandSender sender) {
-        return true;
+        return sender.hasPermission("interactivebooks.open." + id);
     }
 }

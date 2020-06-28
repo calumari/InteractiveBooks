@@ -117,7 +117,7 @@ public class CommandHandler implements TerminableModule {
     private List<String> getFilteredTabComplete(CommandSender sender) {
         List<String> values = new ArrayList<>();
         for (String s : completions) {
-            if (sender.hasPermission("interactivebooks.command" + s)) {
+            if (sender.hasPermission("interactivebooks.command." + s)) {
                 values.add(s);
             }
         }
@@ -127,7 +127,7 @@ public class CommandHandler implements TerminableModule {
     private List<String> getBookIds(CommandSender sender) {
         List<String> values = new ArrayList<>();
         for (IBook book : plugin.getBooks()) {
-            if (sender.hasPermission("interactivebooks.open" + book.getId())) {
+            if (book.hasPermission(sender)) {
                 values.add(book.getId());
             }
         }
