@@ -1,32 +1,41 @@
 package net.socialhangover.interactivebooks;
 
+import com.google.common.collect.ImmutableMap;
+import lombok.Getter;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
 
-    private static InteractiveBooksPlugin instance;
-    private static final Map<String, IBook> books = new HashMap<>();
+    private static InteractiveBooksPlugin instance; // Deprecated
+    private final Map<String, IBook> books = new HashMap<>();
+
+    @Getter
+    private YamlConfiguration config;
 
     @Override
     protected void enable() {
-        instance = this;
-        loadAll();
+        instance = this; // Deprecated
+        reload();
         registerCommand();
         bindModule(new PlayerListener());
     }
 
     @Override
     protected void disable() {
-        instance = null;
+        instance = null; // Deprecated
+    }
+
+    public void reload() {
+        books.keySet().forEach(this::unregisterBook);
+        loadAll();
     }
 
     /**
@@ -48,32 +57,15 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
         return new HashMap<>(books);
     }
 
-    /**
-     * Gets an {@link IBook} by its id.
-     *
-     * @param id the id of the book to get
-     * @return the book with the specified id if it's registered, or null if not found
-     * @see #registerBook(IBook)
-     */
-    public static IBook getBook(String id) {
+    public IBook getBook(String id) {
         return books.get(id);
     }
 
-    /**
-     * Registers a book.
-     *
-     * @param book the book id to register
-     */
-    public static void registerBook(IBook book) {
+    public void registerBook(IBook book) {
         books.put(book.getId(), book);
     }
 
-    /**
-     * Unegisters a book by its id.
-     *
-     * @param id the book id to unregister
-     */
-    public static void unregisterBook(String id) {
+    public void unregisterBook(String id) {
         books.remove(id);
     }
 
@@ -83,27 +75,21 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
         commandIBooks.setTabCompleter(new TabCompleterIBooks());
     }
 
-    static void loadAll() {
-        InteractiveBooksPlugin.getInstance().saveDefaultConfig();
-        InteractiveBooksPlugin.getInstance().reloadConfig();
-        File f = new File(InteractiveBooksPlugin.getInstance().getDataFolder(), "books");
-        if (!f.exists()) {
-            try {
-                if (!f.mkdirs())
-                    throw new IOException();
-                Files.copy(Objects.requireNonNull(InteractiveBooksPlugin.getInstance().getResource("examplebook.yml")), new File(f, "examplebook.yml").toPath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private void loadAll() {
+        config = loadConfig("config.yml");
+        File folder = getRelativeFile("books");
+        File example = new File(folder, "examplebook.yml");
+        if (!example.exists() && !config.getBoolean("save-example", false)) {
+            saveResource("examplebook.yml", false);
         }
-        loadBookConfigs();
+        loadBookConfigs(folder);
     }
 
-    private static void loadBookConfigs() {
-        InteractiveBooksPlugin.getBooks().keySet().forEach(InteractiveBooksPlugin::unregisterBook);
-        File booksFolder = new File(InteractiveBooksPlugin.getInstance().getDataFolder(), "books");
-        for (File f : Objects.requireNonNull(booksFolder.listFiles()))
-            if (f.getName().endsWith(".yml"))
-                InteractiveBooksPlugin.registerBook(new IBook(f.getName().substring(0, f.getName().length() - 4), YamlConfiguration.loadConfiguration(f)));
+    private void loadBookConfigs(File folder) {
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
+            if (file.getName().endsWith(".yml")) {
+                registerBook(new IBook(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file)));
+            }
+        }
     }
 }

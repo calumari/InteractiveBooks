@@ -184,7 +184,7 @@ public final class CommandIBooks implements CommandExecutor {
                     sender.sendMessage("§4You don't have permission to execute this action.");
                     return false;
                 }
-                plugin.loadAll();
+                plugin.reload();
                 sender.sendMessage("§aConfig reloaded!");
                 break;
 
