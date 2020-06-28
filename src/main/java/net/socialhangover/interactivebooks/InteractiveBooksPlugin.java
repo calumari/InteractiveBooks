@@ -62,12 +62,13 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
 
     private void loadAll() {
         config = loadConfig("config.yml");
-        File folder = getRelativeFile("books");
-        File example = new File(folder, "examplebook.yml");
+//        File folder = getRelativeFile("books");
+        File example = new File(getDataFolder(), "examplebook.yml");
         if (!example.exists() && !config.getBoolean("save-example", false)) {
             saveResource("examplebook.yml", false);
         }
-        loadBookConfigs(folder);
+        registerBook(new IBook("example", YamlConfiguration.loadConfiguration(example)));
+//        loadBookConfigs(folder);
     }
 
     private void loadBookConfigs(File folder) {
