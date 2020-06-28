@@ -25,7 +25,7 @@ import java.util.Set;
 @EqualsAndHashCode
 public class IBook {
 
-    private static final String BOOK_ID_KEY = "InteractiveBooks|Book-Id";
+    public static final String BOOK_ID_KEY = "InteractiveBooks|Book-Id";
 
     @Getter
     private final String id;
