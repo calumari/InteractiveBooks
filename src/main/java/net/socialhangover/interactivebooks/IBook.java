@@ -58,11 +58,15 @@ public class IBook {
     public ItemStack getItem(@Nullable Player player) {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
+        meta.setTitle("test");
+        meta.setAuthor("test");
+        meta.setLore(Arrays.asList("", ""));
         List<BaseComponent[]> pages = new ArrayList<>();
         for (String page : this.pages) {
             pages.add(MiniMessageParser.parseFormat(Text.setPlaceholders(player, page)));
         }
         meta.spigot().setPages(pages);
+        book.setItemMeta(meta);
 //        book.setItemMeta(this.getBookMeta(player));
 //        NBTItem nbti = new NBTItem(book);
 //        nbti.setString(bookIdKey, this.getId());
