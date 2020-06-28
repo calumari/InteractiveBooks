@@ -1,5 +1,6 @@
 package net.leonardo_dgs.interactivebooks.util;
 
+import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.lucko.helper.reflect.MinecraftVersion;
 import me.lucko.helper.reflect.MinecraftVersions;
@@ -30,6 +31,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BooksUtils {
+
+    @Getter
+    private static final boolean isBookGenerationSupported = MinecraftVersion.getRuntimeVersion().isAfterOrEq(MinecraftVersion.parse("1.10"));
 
     private static String VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     private static final Plugin PAPIPLUGIN = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
@@ -80,7 +84,7 @@ public class BooksUtils {
         bookMeta.setTitle(meta.getTitle());
         bookMeta.setAuthor(meta.getAuthor());
         bookMeta.setLore(meta.getLore());
-        if (hasBookGenerationSupport())
+        if (isBookGenerationSupported())
             bookMeta.setGeneration(meta.getGeneration());
         replacePlaceholders(bookMeta, player);
         try
@@ -106,32 +110,18 @@ public class BooksUtils {
             meta.setLore(setPlaceholders(player, meta.getLore()));
     }
 
-    public static boolean hasBookGenerationSupport()
-    {
-        return MinecraftVersion.getRuntimeVersion().isAfterOrEq(MinecraftVersions.v1_10);
-    }
-
     public static Generation getBookGeneration(String generation)
     {
         return generation == null ? Generation.ORIGINAL : Generation.valueOf(generation.toUpperCase());
     }
 
-    @SuppressWarnings("deprecation")
     public static ItemStack getItemInMainHand(Player player)
     {
-        if (VERSION.equals("v1_8_R1") || VERSION.equals("v1_8_R2") || VERSION.equals("v1_8_R3"))
-            return player.getInventory().getItemInHand();
         return player.getInventory().getItemInMainHand();
     }
 
-    @SuppressWarnings("deprecation")
     public static void setItemInMainHand(Player player, ItemStack item)
     {
-        if (VERSION.equals("v1_8_R1") || VERSION.equals("v1_8_R2") || VERSION.equals("v1_8_R3"))
-        {
-            player.getInventory().setItemInHand(item);
-            return;
-        }
         player.getInventory().setItemInMainHand(item);
     }
 

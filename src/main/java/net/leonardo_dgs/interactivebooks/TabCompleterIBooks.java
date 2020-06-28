@@ -88,7 +88,7 @@ public final class TabCompleterIBooks implements TabCompleter {
             {
                 completions.add("create");
             }
-            else if (args.length == 5 && BooksUtils.hasBookGenerationSupport())
+            else if (args.length == 5 && BooksUtils.isBookGenerationSupported())
             {
                 for (BookMeta.Generation bookGeneration : BookMeta.Generation.values())
                 {

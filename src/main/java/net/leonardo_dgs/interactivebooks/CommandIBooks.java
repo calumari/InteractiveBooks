@@ -158,7 +158,7 @@ public final class CommandIBooks implements CommandExecutor {
                 String bookGeneration = "ORIGINAL";
                 if (args.length > 5)
                     bookGeneration = args[5].toUpperCase();
-                if (BooksUtils.hasBookGenerationSupport() && !bookGeneration.equals("ORIGINAL") && !bookGeneration.equals("COPY_OF_ORIGINAL") && !bookGeneration.equals("COPY_OF_COPY") && !bookGeneration.equals("TATTERED"))
+                if (BooksUtils.isBookGenerationSupported() && !bookGeneration.equals("ORIGINAL") && !bookGeneration.equals("COPY_OF_ORIGINAL") && !bookGeneration.equals("COPY_OF_COPY") && !bookGeneration.equals("TATTERED"))
                 {
                     sender.sendMessage("§cThe argument supplied as book generation is not valid, possible values: ORIGINAL, COPY_OF_ORIGINAL, COPY_OF_COPY, TATTERED");
                     return false;
