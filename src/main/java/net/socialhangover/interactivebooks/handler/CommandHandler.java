@@ -7,8 +7,10 @@ import me.lucko.helper.command.tabcomplete.CompletionSupplier;
 import me.lucko.helper.command.tabcomplete.TabCompleter;
 import me.lucko.helper.terminable.TerminableConsumer;
 import me.lucko.helper.terminable.module.TerminableModule;
+import net.socialhangover.interactivebooks.IBook;
 import net.socialhangover.interactivebooks.InteractiveBooksPlugin;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -33,6 +35,10 @@ public class CommandHandler implements TerminableModule {
                         return completer.complete(c.args());
                     }
 
+                    if (root.equalsIgnoreCase("open")) {
+                        return completer.at(1, CompletionSupplier.startsWith(getBookIds(c.sender()))).complete(c.args());
+                    }
+
                     if (root.equalsIgnoreCase("create")) {
                         return completer.at(1, CompletionSupplier.startsWith("areallycoolbook", "ataleofadeveloper"))
                                 .complete(c.args());
@@ -43,6 +49,25 @@ public class CommandHandler implements TerminableModule {
                     String root = c.arg(0).parse(String.class).orElse(null);
                     if (root == null) {
                         return;
+                    }
+
+                    if (root.equalsIgnoreCase("open")) {
+                        if (!(c.sender() instanceof Player)) {
+                            c.reply("you must be a player to run this command"); // todo locale
+                            return;
+                        }
+
+                        String name = c.arg(1).parse(String.class).orElse(null);
+                        if (name == null) {
+                            c.reply("missing book name"); // todo locale
+                            return;
+                        }
+                        IBook book = plugin.getBook(name);
+                        if (book == null) {
+                            c.reply("missing book"); // todo locale
+                            return;
+                        }
+                        book.open((Player) c.sender());
                     }
 
                     if (root.equalsIgnoreCase("create")) {
@@ -72,6 +97,16 @@ public class CommandHandler implements TerminableModule {
         for (String s : completions) {
             if (sender.hasPermission("interactivebooks.command" + s)) {
                 values.add(s);
+            }
+        }
+        return values;
+    }
+
+    private List<String> getBookIds(CommandSender sender) {
+        List<String> values = new ArrayList<>();
+        for (IBook book : plugin.getBooks()) {
+            if (sender.hasPermission("interactivebooks.open" + book.getId())) {
+                values.add(book.getId());
             }
         }
         return values;
