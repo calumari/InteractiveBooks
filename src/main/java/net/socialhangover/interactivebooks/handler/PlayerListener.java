@@ -1,4 +1,4 @@
-package net.socialhangover.interactivebooks;
+package net.socialhangover.interactivebooks.handler;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,8 @@ import me.lucko.helper.reflect.MinecraftVersion;
 import me.lucko.helper.reflect.MinecraftVersions;
 import me.lucko.helper.terminable.TerminableConsumer;
 import me.lucko.helper.terminable.module.TerminableModule;
+import net.socialhangover.interactivebooks.IBook;
+import net.socialhangover.interactivebooks.InteractiveBooksPlugin;
 import net.socialhangover.interactivebooks.util.BooksUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

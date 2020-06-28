@@ -3,6 +3,7 @@ package net.socialhangover.interactivebooks;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
+import net.socialhangover.interactivebooks.handler.PlayerListener;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 
