@@ -29,7 +29,7 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
     }
 
     public void reload() {
-        books.keySet().forEach(this::unregisterBook);
+        books.clear();
         loadAll();
     }
 
