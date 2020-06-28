@@ -1,7 +1,7 @@
-package net.leonardo_dgs.interactivebooks;
+package net.socialhangover.interactivebooks;
 
 import me.lucko.helper.text.Text;
-import net.leonardo_dgs.interactivebooks.util.BooksUtils;
+import net.socialhangover.interactivebooks.util.BooksUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,19 +24,15 @@ public final class CommandIBooks implements CommandExecutor {
                     + "§e/ibooks reload";
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
-    {
-        if (args.length == 0)
-        {
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if (args.length == 0) {
             sender.sendMessage(helpMessage);
             return false;
         }
 
-        switch (args[0])
-        {
+        switch (args[0]) {
             case "list":
-                if (!sender.hasPermission("interactivebooks.command.list"))
-                {
+                if (!sender.hasPermission("interactivebooks.command.list")) {
                     sender.sendMessage("§4You don't have permission to execute this action.");
                     return false;
                 }
@@ -47,30 +43,25 @@ public final class CommandIBooks implements CommandExecutor {
                 break;
 
             case "open":
-                if (!sender.hasPermission("interactivebooks.command.open"))
-                {
+                if (!sender.hasPermission("interactivebooks.command.open")) {
                     sender.sendMessage("§4You don't have permission to execute this action.");
                     return false;
                 }
-                if (args.length == 1)
-                {
+                if (args.length == 1) {
                     sender.sendMessage("§cUsage: §7/ibooks open <book-id> [player]");
                     return false;
                 }
-                if (args.length == 2 && !(sender instanceof Player))
-                {
+                if (args.length == 2 && !(sender instanceof Player)) {
                     sender.sendMessage("§cIf you execute this command by the console, you need to specify the player's name.");
                     return false;
                 }
                 Player playerToOpen = args.length == 2 ? (Player) sender : Bukkit.getPlayer(args[2]);
                 String bookIdToOpen = Text.setPlaceholders(playerToOpen, args[1]);
-                if (InteractiveBooks.getBook(bookIdToOpen) == null)
-                {
+                if (InteractiveBooks.getBook(bookIdToOpen) == null) {
                     sender.sendMessage("§cThat book doesn't exists.");
                     return false;
                 }
-                if (playerToOpen == null)
-                {
+                if (playerToOpen == null) {
                     sender.sendMessage("§cThat player isn't connected.");
                     return false;
                 }
@@ -80,25 +71,21 @@ public final class CommandIBooks implements CommandExecutor {
                 break;
 
             case "get":
-                if (!sender.hasPermission("interactivebooks.command.get"))
-                {
+                if (!sender.hasPermission("interactivebooks.command.get")) {
                     sender.sendMessage("§4You don't have permission to execute this action.");
                     return false;
                 }
-                if (!(sender instanceof Player))
-                {
+                if (!(sender instanceof Player)) {
                     sender.sendMessage("§cThat command can only be executed by players.");
                     return false;
                 }
-                if (args.length == 1)
-                {
+                if (args.length == 1) {
                     sender.sendMessage("§cUsage: §7/ibooks get <book-id>");
                     return false;
                 }
                 Player playerToGet = (Player) sender;
                 String bookIdToGet = Text.setPlaceholders(playerToGet, args[1]);
-                if (InteractiveBooks.getBook(bookIdToGet) == null)
-                {
+                if (InteractiveBooks.getBook(bookIdToGet) == null) {
                     sender.sendMessage("§cThat book doesn't exists.");
                     return false;
                 }
@@ -107,25 +94,21 @@ public final class CommandIBooks implements CommandExecutor {
                 break;
 
             case "give":
-                if (!sender.hasPermission("interactivebooks.command.give"))
-                {
+                if (!sender.hasPermission("interactivebooks.command.give")) {
                     sender.sendMessage("§4You don't have permission to execute this action.");
                     return false;
                 }
-                if (args.length < 3)
-                {
+                if (args.length < 3) {
                     sender.sendMessage("§cUsage: §7/ibooks give <book-id> <player>");
                     return false;
                 }
                 Player playerToGive = Bukkit.getPlayer(args[2]);
                 String bookIdToGive = Text.setPlaceholders(playerToGive, args[1]);
-                if (InteractiveBooks.getBook(bookIdToGive) == null)
-                {
+                if (InteractiveBooks.getBook(bookIdToGive) == null) {
                     sender.sendMessage("§cThat book doesn't exists.");
                     return false;
                 }
-                if (playerToGive == null)
-                {
+                if (playerToGive == null) {
                     sender.sendMessage("§cThat player isn't connected.");
                     return false;
                 }
@@ -135,18 +118,15 @@ public final class CommandIBooks implements CommandExecutor {
                 break;
 
             case "create":
-                if (!sender.hasPermission("interactivebooks.command.create"))
-                {
+                if (!sender.hasPermission("interactivebooks.command.create")) {
                     sender.sendMessage("§4You don't have permission to execute this action.");
                     return false;
                 }
-                if (args.length < 5)
-                {
+                if (args.length < 5) {
                     sender.sendMessage("§cUsage: §7/ibooks create <book-id> <name> <title> <author> [generation]");
                     return false;
                 }
-                if (InteractiveBooks.getBook(args[1]) != null)
-                {
+                if (InteractiveBooks.getBook(args[1]) != null) {
                     sender.sendMessage("§cA book with that id already exists");
                     return false;
                 }
@@ -158,8 +138,7 @@ public final class CommandIBooks implements CommandExecutor {
                 String bookGeneration = "ORIGINAL";
                 if (args.length > 5)
                     bookGeneration = args[5].toUpperCase();
-                if (BooksUtils.isBookGenerationSupported() && !bookGeneration.equals("ORIGINAL") && !bookGeneration.equals("COPY_OF_ORIGINAL") && !bookGeneration.equals("COPY_OF_COPY") && !bookGeneration.equals("TATTERED"))
-                {
+                if (BooksUtils.isBookGenerationSupported() && !bookGeneration.equals("ORIGINAL") && !bookGeneration.equals("COPY_OF_ORIGINAL") && !bookGeneration.equals("COPY_OF_COPY") && !bookGeneration.equals("TATTERED")) {
                     sender.sendMessage("§cThe argument supplied as book generation is not valid, possible values: ORIGINAL, COPY_OF_ORIGINAL, COPY_OF_COPY, TATTERED");
                     return false;
                 }
@@ -197,8 +176,7 @@ public final class CommandIBooks implements CommandExecutor {
 			break;
 		*/
             case "reload":
-                if (!sender.hasPermission("interactivebooks.command.reload"))
-                {
+                if (!sender.hasPermission("interactivebooks.command.reload")) {
                     sender.sendMessage("§4You don't have permission to execute this action.");
                     return false;
                 }

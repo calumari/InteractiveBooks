@@ -1,4 +1,4 @@
-package net.leonardo_dgs.interactivebooks.util;
+package net.socialhangover.interactivebooks.util;
 
 enum BookEventActionType {
 
@@ -12,8 +12,7 @@ enum BookEventActionType {
     CHANGE_PAGE("change page"),
     COPY_TO_CLIPBOARD("copy");
 
-    static BookEventActionType parse(String type)
-    {
+    static BookEventActionType parse(String type) {
         for (BookEventActionType actionType : values())
             for (String identifier : actionType.getAliases())
                 if (type.equalsIgnoreCase(identifier))
@@ -23,13 +22,11 @@ enum BookEventActionType {
 
     private final String[] aliases;
 
-    BookEventActionType(String... aliases)
-    {
+    BookEventActionType(String... aliases) {
         this.aliases = aliases;
     }
 
-    public String[] getAliases()
-    {
+    public String[] getAliases() {
         return aliases;
     }
 

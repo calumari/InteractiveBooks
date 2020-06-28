@@ -1,4 +1,4 @@
-package net.leonardo_dgs.interactivebooks;
+package net.socialhangover.interactivebooks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -14,8 +14,7 @@ public final class InteractiveBooks extends JavaPlugin {
     private static final Map<String, IBook> books = new HashMap<>();
 
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         instance = this;
         Config.loadAll();
         registerCommand();
@@ -23,8 +22,7 @@ public final class InteractiveBooks extends JavaPlugin {
     }
 
     @Override
-    public void onDisable()
-    {
+    public void onDisable() {
         instance = null;
     }
 
@@ -33,8 +31,7 @@ public final class InteractiveBooks extends JavaPlugin {
      *
      * @return an instance of the plugin
      */
-    public static InteractiveBooks getInstance()
-    {
+    public static InteractiveBooks getInstance() {
         return instance;
     }
 
@@ -43,8 +40,7 @@ public final class InteractiveBooks extends JavaPlugin {
      *
      * @return a {@link Map} with book ids as keys and the registered books ({@link IBook}) as values
      */
-    public static Map<String, IBook> getBooks()
-    {
+    public static Map<String, IBook> getBooks() {
         return new HashMap<>(books);
     }
 
@@ -55,8 +51,7 @@ public final class InteractiveBooks extends JavaPlugin {
      * @return the book with the specified id if it's registered, or null if not found
      * @see #registerBook(IBook)
      */
-    public static IBook getBook(String id)
-    {
+    public static IBook getBook(String id) {
         return books.get(id);
     }
 
@@ -65,8 +60,7 @@ public final class InteractiveBooks extends JavaPlugin {
      *
      * @param book the book id to register
      */
-    public static void registerBook(IBook book)
-    {
+    public static void registerBook(IBook book) {
         books.put(book.getId(), book);
     }
 
@@ -75,13 +69,11 @@ public final class InteractiveBooks extends JavaPlugin {
      *
      * @param id the book id to unregister
      */
-    public static void unregisterBook(String id)
-    {
+    public static void unregisterBook(String id) {
         books.remove(id);
     }
 
-    private void registerCommand()
-    {
+    private void registerCommand() {
         PluginCommand commandIBooks = getCommand("ibooks");
         Objects.requireNonNull(commandIBooks).setExecutor(new CommandIBooks());
         commandIBooks.setTabCompleter(new TabCompleterIBooks());
