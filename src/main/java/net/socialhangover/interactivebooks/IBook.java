@@ -1,5 +1,6 @@
 package net.socialhangover.interactivebooks;
 
+import com.google.common.base.Enums;
 import com.google.common.collect.ImmutableList;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.EqualsAndHashCode;
@@ -29,15 +30,24 @@ public class IBook {
     @Getter
     private final String id;
 
-    @Getter
-    private final List<String> pages;
+    private final String name;
+    private final String title;
+    private final String author;
+    private final List<String> lore;
+    private final BookMeta.Generation generation;
+    private final List<String> chapters;
 
     @Getter
     private final List<String> commands;
 
     public IBook(String id, YamlConfiguration config) {
         this.id = id;
-        this.pages = ImmutableList.copyOf(config.getStringList("pages"));
+        this.name = config.getString("name", "");
+        this.title = config.getString("title", "");
+        this.author = config.getString("author", "");
+        this.lore = ImmutableList.copyOf(config.getStringList("lore"));
+        this.chapters = ImmutableList.copyOf(config.getStringList("chapters"));
+        this.generation = Enums.getIfPresent(BookMeta.Generation.class, config.getString("generation", "")).or(BookMeta.Generation.ORIGINAL);
 
         Set<String> commands = new HashSet<>();
         if (config.getString("commands") != null) {
@@ -55,12 +65,16 @@ public class IBook {
     public ItemStack getItem(@Nullable Player player) {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
-        meta.setTitle("test");
-        meta.setAuthor("test");
-        meta.setLore(Arrays.asList("", ""));
+        meta.setTitle(Text.setPlaceholders(player, name));
+        meta.setAuthor(Text.setPlaceholders(player, author));
+        if (!lore.isEmpty()) {
+            meta.setLore(Text.setPlaceholders(player, lore));
+        }
+        meta.setGeneration(generation);
+
         List<BaseComponent[]> pages = new ArrayList<>();
-        for (String page : this.pages) {
-            pages.add(MiniMessageParser.parseFormat(Text.setPlaceholders(player, page)));
+        for (String chapter : chapters) {
+            pages.add(MiniMessageParser.parseFormat(Text.setPlaceholders(player, chapter)));
         }
         meta.spigot().setPages(pages);
         book.setItemMeta(meta);
