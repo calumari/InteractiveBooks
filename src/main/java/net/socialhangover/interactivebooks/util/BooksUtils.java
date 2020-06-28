@@ -3,6 +3,7 @@ package net.socialhangover.interactivebooks.util;
 import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.lucko.helper.reflect.MinecraftVersion;
+import me.lucko.helper.reflect.MinecraftVersions;
 import me.lucko.helper.reflect.ServerReflection;
 import me.lucko.helper.text3.Text;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -32,7 +33,7 @@ import java.util.regex.Pattern;
 public class BooksUtils {
 
     @Getter
-    private static final boolean isBookGenerationSupported = MinecraftVersion.getRuntimeVersion().isAfterOrEq(MinecraftVersion.parse("1.10"));
+    private static final boolean isBookGenerationSupported = MinecraftVersion.getRuntimeVersion().isAfterOrEq(MinecraftVersions.v1_10);
 
     private static String VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     private static final Plugin PAPIPLUGIN = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
