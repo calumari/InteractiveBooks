@@ -1,7 +1,6 @@
 package net.socialhangover.interactivebooks.util;
 
 import lombok.Getter;
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.lucko.helper.reflect.MinecraftVersion;
 import me.lucko.helper.reflect.MinecraftVersions;
 import me.lucko.helper.reflect.ServerReflection;
@@ -11,14 +10,11 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.BookMeta.Generation;
-import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -35,8 +31,6 @@ public class BooksUtils {
     @Getter
     private static final boolean isBookGenerationSupported = MinecraftVersion.getRuntimeVersion().isAfterOrEq(MinecraftVersions.v1_10);
 
-    private static String VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-    private static final Plugin PAPIPLUGIN = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
     private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("(<[a-zA-Z ]+:[^>]*>|<reset>)");
     private static final Method CHATSERIALIZER_A;
     private static final Field FIELD_PAGES;
@@ -95,7 +89,7 @@ public class BooksUtils {
         if (meta.getAuthor() != null)
             meta.setAuthor(Text.setPlaceholders(player, meta.getAuthor()));
         if (meta.getLore() != null)
-            meta.setLore(setPlaceholders(player, meta.getLore()));
+            meta.setLore(Text.setPlaceholders(player, meta.getLore()));
     }
 
     public static Generation getBookGeneration(String generation) {
@@ -208,22 +202,10 @@ public class BooksUtils {
         return str.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">");
     }
 
-    private static List<String> setPlaceholders(Player player, List<String> text) {
-        if (PAPIPLUGIN != null && PAPIPLUGIN.isEnabled())
-            return PlaceholderAPI.setPlaceholders(player, text);
-        else {
-            List<String> coloredText = new ArrayList<>();
-            for (String s : text)
-                coloredText.add(ChatColor.translateAlternateColorCodes('&', s));
-            return coloredText;
-        }
-    }
-
     private static TextComponent[] convertListToArray(List<TextComponent> list) {
         TextComponent[] objects = new TextComponent[list.size()];
         for (int i = 0; i < list.size(); i++)
             objects[i] = list.get(i);
         return objects;
     }
-
 }
