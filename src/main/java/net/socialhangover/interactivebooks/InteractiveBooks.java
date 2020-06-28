@@ -35,6 +35,7 @@ public final class InteractiveBooks extends JavaPlugin {
      *
      * @return an instance of the plugin
      */
+    @Deprecated
     public static InteractiveBooks getInstance() {
         return instance;
     }
