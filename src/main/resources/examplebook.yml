@@ -23,19 +23,21 @@ lore:
 # Command to open this book
 # You can remove this by setting it to ''
 # Separate multiple commands with a space
-open_command: 'examplebook'
+commands: 'examplebook'
 
 pages:
-  '1':
-    - '<tooltip:I''m a tooltip>Hover here to see a tooltip<reset>'
-    - '<tooltip:Run the command "/examplecommand"><run command:/examplecommand>Click here to run a command<reset>'
-    - '<link:https://www.spigotmc.org/resources/interactivebooks.45604/>Click here to open a link<reset>'
-    - '<copy:Hello world>Click here to copy a secret phrase<reset>'
-  '2':
-    - '&cExample placeholders'
-    - ''
-    - 'Name: &a%player_name%'
-    - 'Level: &6%player_level%'
-    - 'Gamemode: &c%player_gamemode%'
-    - 'Balance: &6%vault_eco_balance%'
-    - 'Online players: &4%server_online%'
+#  '1':
+#    - '<tooltip:I''m a tooltip>Hover here to see a tooltip<reset>'
+#    - '<tooltip:Run the command "/examplecommand"><run command:/examplecommand>Click here to run a command<reset>'
+#    - '<link:https://www.spigotmc.org/resources/interactivebooks.45604/>Click here to open a link<reset>'
+#    - '<copy:Hello world>Click here to copy a secret phrase<reset>'
+#  '2':
+#    - '&cExample placeholders'
+#    - ''
+#    - 'Name: &a%player_name%'
+#    - 'Level: &6%player_level%'
+#    - 'Gamemode: &c%player_gamemode%'
+#    - 'Balance: &6%vault_eco_balance%'
+#    - 'Online players: &4%server_online%'
+  - >
+    <click:run_command:/test command>TEST

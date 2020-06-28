@@ -1,6 +1,5 @@
 package net.socialhangover.interactivebooks.handler;
 
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.RequiredArgsConstructor;
 import me.lucko.helper.Events;
 import me.lucko.helper.reflect.MinecraftVersion;
@@ -9,15 +8,10 @@ import me.lucko.helper.terminable.TerminableConsumer;
 import me.lucko.helper.terminable.module.TerminableModule;
 import net.socialhangover.interactivebooks.IBook;
 import net.socialhangover.interactivebooks.InteractiveBooksPlugin;
-import net.socialhangover.interactivebooks.util.BooksUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.event.Event;
-import org.bukkit.event.block.Action;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -60,44 +54,42 @@ public class PlayerListener implements TerminableModule {
                 })
                 .bindWith(consumer);
 
-        Events.subscribe(PlayerInteractEvent.class)
-                .handler(e -> {
-                    if (e.useItemInHand().equals(Event.Result.DENY))
-                        return;
-                    if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
-                        return;
-                    if (!plugin.getConfig().getBoolean("update_books_on_use"))
-                        return;
-                    if (!BooksUtils.getItemInMainHand(e.getPlayer()).getType().equals(Material.WRITTEN_BOOK))
-                        return;
-                    NBTItem nbti = new NBTItem(BooksUtils.getItemInMainHand(e.getPlayer()));
-                    if (!nbti.hasKey("InteractiveBooks|Book-Id"))
-                        return;
-                    IBook book = plugin.getBook(nbti.getString("InteractiveBooks|Book-Id"));
-                    if (book == null)
-                        return;
-                    ItemStack bookItem = book.getItem(e.getPlayer());
-                    bookItem.setAmount(BooksUtils.getItemInMainHand(e.getPlayer()).getAmount());
-                    BooksUtils.setItemInMainHand(e.getPlayer(), bookItem);
-                })
-                .bindWith(consumer);
+//        Events.subscribe(PlayerInteractEvent.class)
+//                .handler(e -> {
+//                    if (e.useItemInHand().equals(Event.Result.DENY))
+//                        return;
+//                    if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+//                        return;
+//                    if (!plugin.getConfig().getBoolean("update_books_on_use"))
+//                        return;
+//                    if (!BooksUtils.getItemInMainHand(e.getPlayer()).getType().equals(Material.WRITTEN_BOOK))
+//                        return;
+//                    NBTItem nbti = new NBTItem(BooksUtils.getItemInMainHand(e.getPlayer()));
+//                    if (!nbti.hasKey("InteractiveBooks|Book-Id"))
+//                        return;
+//                    IBook book = plugin.getBook(nbti.getString("InteractiveBooks|Book-Id"));
+//                    if (book == null)
+//                        return;
+//                    ItemStack bookItem = book.getItem(e.getPlayer());
+//                    bookItem.setAmount(BooksUtils.getItemInMainHand(e.getPlayer()).getAmount());
+//                    BooksUtils.setItemInMainHand(e.getPlayer(), bookItem);
+//                })
+//                .bindWith(consumer);
 
         Events.subscribe(PlayerCommandPreprocessEvent.class)
                 .handler(e -> {
-                    String command = e.getMessage().split(" ", 2)[0].replaceFirst("/", "").toLowerCase();
-                    IBook iBook = null;
-                    for (IBook book : plugin.getBooks())
-                        if (book.getOpenCommands().contains(command)) {
-                            iBook = book;
-                            break;
-                        }
-                    if (iBook == null)
+                    IBook book = plugin.getByCommand(e.getMessage().split(" ", 2)[0].replaceFirst("/", "").toLowerCase());
+                    if (book == null) {
                         return;
-                    if (e.getPlayer().hasPermission("interactivebooks.open." + iBook.getId()))
-                        iBook.open(e.getPlayer());
-                    else
-                        e.getPlayer().sendMessage("§cYou don't have permission to open this book.");
+                    }
 
+                    Player player = e.getPlayer();
+                    if (!book.hasPermission(player)) {
+                        player.sendMessage("you don't have permission"); // todo locale
+                        return;
+                    }
+
+                    book.open(player);
                     e.setCancelled(true);
                 })
                 .bindWith(consumer);
