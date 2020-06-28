@@ -1,6 +1,7 @@
 package net.socialhangover.interactivebooks;
 
 import com.google.common.collect.ImmutableList;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import me.lucko.helper.text3.Text;
@@ -23,7 +24,7 @@ import java.util.Set;
 @EqualsAndHashCode
 public class IBook {
 
-//    private static final String bookIdKey = "InteractiveBooks|Book-Id";
+    private static final String BOOK_ID_KEY = "InteractiveBooks|Book-Id";
 
     @Getter
     private final String id;
@@ -51,10 +52,6 @@ public class IBook {
         player.openBook(getItem(player));
     }
 
-    public ItemStack getItem() {
-        return getItem(null);
-    }
-
     public ItemStack getItem(@Nullable Player player) {
         ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
@@ -67,11 +64,14 @@ public class IBook {
         }
         meta.spigot().setPages(pages);
         book.setItemMeta(meta);
-//        book.setItemMeta(this.getBookMeta(player));
-//        NBTItem nbti = new NBTItem(book);
-//        nbti.setString(bookIdKey, this.getId());
-//        return nbti.getItem();
         return book;
+    }
+
+    public ItemStack getTaggedItem(@Nullable Player player) {
+        ItemStack book = getItem(player);
+        NBTItem nbti = new NBTItem(book);
+        nbti.setString(BOOK_ID_KEY, this.getId());
+        return nbti.getItem();
     }
 
     public boolean hasPermission(CommandSender sender) {
