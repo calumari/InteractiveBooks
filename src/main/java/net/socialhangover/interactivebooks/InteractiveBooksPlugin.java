@@ -3,8 +3,8 @@ package net.socialhangover.interactivebooks;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
+import net.socialhangover.interactivebooks.handler.CommandHandler;
 import net.socialhangover.interactivebooks.handler.PlayerListener;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -23,7 +23,7 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
     @Override
     protected void enable() {
         reload();
-        registerCommand();
+        bindModule(new CommandHandler(this));
         bindModule(new PlayerListener(this));
     }
 
@@ -46,12 +46,6 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
 
     public void unregisterBook(String id) {
         books.remove(id);
-    }
-
-    private void registerCommand() {
-        PluginCommand commandIBooks = getCommand("ibooks");
-        Objects.requireNonNull(commandIBooks).setExecutor(new CommandIBooks(this));
-        commandIBooks.setTabCompleter(new TabCompleterIBooks(this));
     }
 
     private void loadAll() {
