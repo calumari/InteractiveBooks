@@ -1,9 +1,9 @@
 name: ${name}
-main: net.socialhangover.net.InteractiveBooksPlugin
+main: net.socialhangover.interactivebooks.InteractiveBooksPlugin
 version: ${version}
 api-version: 1.16
 description: ${description}
 authors: ["Leonardo_DGS", "calumari"]
 website: ${url}
-depends: [helper]
+depend: [helper]
 softdepend: [PlaceholderAPI]
