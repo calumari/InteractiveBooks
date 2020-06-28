@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.BookMeta;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,9 +40,9 @@ public class IBook {
 
         Set<String> commands = new HashSet<>();
         if (config.getString("commands") != null) {
-            commands.add(config.getString("commands"));
+            commands.addAll(Arrays.asList(config.getString("commands").toLowerCase().split(" ")));
         } else {
-            commands.addAll(config.getStringList("commands"));
+            config.getStringList("commands").forEach(s -> commands.add(s.toLowerCase()));
         }
         this.commands = ImmutableList.copyOf(commands);
     }
