@@ -62,7 +62,6 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
         books.remove(id);
     }
 
-    @SneakyThrows
     private void loadAll() {
         config = loadConfig("config.yml");
 
@@ -72,7 +71,7 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
         if (config.getBoolean("load-example", true)) {
             File example = new File(folder, "examplebook.yml");
             if (!example.exists()) {
-                Files.copy(getResource("examplebook.yml"), example.toPath());
+                createTemplate("example");
             }
             registerBook(new IBook("example", YamlConfiguration.loadConfiguration(example)));
         }
@@ -85,5 +84,15 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
                 registerBook(new IBook(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file)));
             }
         }
+    }
+
+    @SneakyThrows
+    public File createTemplate(String name) {
+        File folder = new File(getDataFolder(), name);
+        if (folder.exists()) {
+            return null;
+        }
+        Files.copy(getResource("examplebook.yml"), folder.toPath());
+        return folder;
     }
 }
