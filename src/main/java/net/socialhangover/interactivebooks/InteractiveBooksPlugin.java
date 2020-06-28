@@ -7,6 +7,7 @@ import net.socialhangover.interactivebooks.handler.CommandHandler;
 import net.socialhangover.interactivebooks.handler.PlayerListener;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +37,19 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
         return ImmutableList.copyOf(books.values());
     }
 
+    @Nullable
     public IBook getBook(String id) {
         return books.get(id);
+    }
+
+    @Nullable
+    public IBook getByCommand(String command) {
+        for (IBook book : books.values()) {
+            if (book.getCommands().contains(command)) {
+                return book;
+            }
+        }
+        return null;
     }
 
     public void registerBook(IBook book) {
