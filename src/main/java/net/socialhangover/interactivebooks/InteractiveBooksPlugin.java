@@ -71,6 +71,7 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
     }
 
     private void loadBookConfigs(File folder) {
+        folder.mkdirs();
         for (File file : Objects.requireNonNull(folder.listFiles())) {
             if (file.getName().endsWith(".yml")) {
                 registerBook(new IBook(file.getName().substring(0, file.getName().length() - 4), YamlConfiguration.loadConfiguration(file)));
