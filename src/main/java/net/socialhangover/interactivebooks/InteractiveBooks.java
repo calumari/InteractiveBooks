@@ -1,9 +1,8 @@
 package net.socialhangover.interactivebooks;
 
-import org.bukkit.Bukkit;
+import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,21 +11,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public final class InteractiveBooks extends JavaPlugin {
+public final class InteractiveBooks extends ExtendedJavaPlugin {
 
     private static InteractiveBooks instance;
     private static final Map<String, IBook> books = new HashMap<>();
 
     @Override
-    public void onEnable() {
+    protected void enable() {
         instance = this;
         loadAll();
         registerCommand();
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        bindModule(new PlayerListener());
     }
 
     @Override
-    public void onDisable() {
+    protected void disable() {
         instance = null;
     }
 
