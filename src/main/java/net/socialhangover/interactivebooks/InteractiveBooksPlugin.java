@@ -1,6 +1,6 @@
 package net.socialhangover.interactivebooks;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import org.bukkit.command.PluginCommand;
@@ -14,7 +14,6 @@ import java.util.Objects;
 
 public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
 
-    private static InteractiveBooksPlugin instance; // Deprecated
     private final Map<String, IBook> books = new HashMap<>();
 
     @Getter
@@ -22,15 +21,9 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
 
     @Override
     protected void enable() {
-        instance = this; // Deprecated
         reload();
         registerCommand();
-        bindModule(new PlayerListener());
-    }
-
-    @Override
-    protected void disable() {
-        instance = null; // Deprecated
+        bindModule(new PlayerListener(this));
     }
 
     public void reload() {
@@ -38,23 +31,8 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
         loadAll();
     }
 
-    /**
-     * Gets the instance of this plugin.
-     *
-     * @return an instance of the plugin
-     */
-    @Deprecated
-    public static InteractiveBooksPlugin getInstance() {
-        return instance;
-    }
-
-    /**
-     * Gets the registered books.
-     *
-     * @return a {@link Map} with book ids as keys and the registered books ({@link IBook}) as values
-     */
-    public static Map<String, IBook> getBooks() {
-        return new HashMap<>(books);
+    public List<IBook> getBooks() {
+        return ImmutableList.copyOf(books.values());
     }
 
     public IBook getBook(String id) {
@@ -72,7 +50,7 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
     private void registerCommand() {
         PluginCommand commandIBooks = getCommand("ibooks");
         Objects.requireNonNull(commandIBooks).setExecutor(new CommandIBooks(this));
-        commandIBooks.setTabCompleter(new TabCompleterIBooks());
+        commandIBooks.setTabCompleter(new TabCompleterIBooks(this));
     }
 
     private void loadAll() {

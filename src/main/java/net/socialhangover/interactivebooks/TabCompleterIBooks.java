@@ -1,5 +1,6 @@
 package net.socialhangover.interactivebooks;
 
+import lombok.RequiredArgsConstructor;
 import net.socialhangover.interactivebooks.util.BooksUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -13,7 +14,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public final class TabCompleterIBooks implements TabCompleter {
+@RequiredArgsConstructor
+public class TabCompleterIBooks implements TabCompleter {
+
+    private final InteractiveBooksPlugin plugin;
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -30,8 +34,9 @@ public final class TabCompleterIBooks implements TabCompleter {
             if (args.length == 1) {
                 completions.add("open");
             } else if (args.length == 2) {
-                Set<String> bookCompletions = InteractiveBooksPlugin.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
-                completions.addAll(bookCompletions);
+                // todo replace with commandcompletion
+//                Set<String> bookCompletions = plugin.getBooks().stream().filter(b -> b.getId().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
+//                completions.addAll(bookCompletions);
             } else if (args.length == 3) {
                 Set<Player> players = Bukkit.getOnlinePlayers().stream().filter(completionPlayer -> completionPlayer.getName().toLowerCase().startsWith(args[2].toLowerCase())).collect(Collectors.toSet());
                 players.forEach(completionPlayer ->
@@ -45,16 +50,18 @@ public final class TabCompleterIBooks implements TabCompleter {
             if (args.length == 1) {
                 completions.add("get");
             } else if (args.length == 2) {
-                Set<String> bookCompletions = InteractiveBooksPlugin.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
-                completions.addAll(bookCompletions);
+                // todo replace with commandcompletion
+//                Set<String> bookCompletions = plugin.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
+//                completions.addAll(bookCompletions);
             }
         }
         if ("give".startsWith(args[0].toLowerCase()) && sender.hasPermission("interactivebooks.command.give")) {
             if (args.length == 1) {
                 completions.add("give");
             } else if (args.length == 2) {
-                Set<String> bookCompletions = InteractiveBooksPlugin.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
-                completions.addAll(bookCompletions);
+                // todo replace with commandcompletion
+//                Set<String> bookCompletions = plugin.getBooks().keySet().stream().filter(bookId -> bookId.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toSet());
+//                completions.addAll(bookCompletions);
             } else if (args.length == 3) {
                 Set<Player> players = Bukkit.getOnlinePlayers().stream().filter(completionPlayer -> completionPlayer.getName().toLowerCase().startsWith(args[2].toLowerCase())).collect(Collectors.toSet());
                 players.forEach(completionPlayer ->
@@ -81,5 +88,4 @@ public final class TabCompleterIBooks implements TabCompleter {
 
         return completions;
     }
-
 }

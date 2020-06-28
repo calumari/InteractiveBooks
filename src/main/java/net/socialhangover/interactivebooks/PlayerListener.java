@@ -1,6 +1,7 @@
 package net.socialhangover.interactivebooks;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import lombok.RequiredArgsConstructor;
 import me.lucko.helper.Events;
 import me.lucko.helper.reflect.MinecraftVersion;
 import me.lucko.helper.reflect.MinecraftVersions;
@@ -19,9 +20,12 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class PlayerListener implements TerminableModule {
 
     private static final boolean MC_AFTER_1_14 = MinecraftVersion.getRuntimeVersion().isAfterOrEq(MinecraftVersions.v1_14);
+
+    private final InteractiveBooksPlugin plugin;
 
     @Override
     public void setup(@Nonnull TerminableConsumer consumer) {
@@ -30,24 +34,24 @@ public class PlayerListener implements TerminableModule {
                     String openBookId;
                     List<String> booksToGiveIds;
                     if (e.getPlayer().hasPlayedBefore()) {
-                        openBookId = InteractiveBooksPlugin.getInstance().getConfig().getString("open_book_on_join");
-                        booksToGiveIds = InteractiveBooksPlugin.getInstance().getConfig().getStringList("books_on_join");
+                        openBookId = plugin.getConfig().getString("open_book_on_join");
+                        booksToGiveIds = plugin.getConfig().getStringList("books_on_join");
                     } else {
-                        openBookId = InteractiveBooksPlugin.getInstance().getConfig().getString("open_book_on_first_join");
-                        booksToGiveIds = InteractiveBooksPlugin.getInstance().getConfig().getStringList("books_on_first_join");
+                        openBookId = plugin.getConfig().getString("open_book_on_first_join");
+                        booksToGiveIds = plugin.getConfig().getStringList("books_on_first_join");
                     }
-                    if (openBookId != null && InteractiveBooksPlugin.getBook(openBookId) != null && e.getPlayer().hasPermission("interactivebooks.open." + openBookId)) {
-                        IBook book = InteractiveBooksPlugin.getBook(openBookId);
+                    if (openBookId != null && plugin.getBook(openBookId) != null && e.getPlayer().hasPermission("interactivebooks.open." + openBookId)) {
+                        IBook book = plugin.getBook(openBookId);
                         if (book != null) {
                             if (MC_AFTER_1_14)
                                 book.open(e.getPlayer());
                             else
-                                Bukkit.getScheduler().runTask(InteractiveBooksPlugin.getInstance(), () -> book.open(e.getPlayer()));
+                                Bukkit.getScheduler().runTask(plugin, () -> book.open(e.getPlayer()));
                         }
                     }
 
                     booksToGiveIds.forEach(id -> {
-                        IBook book = InteractiveBooksPlugin.getBook(id);
+                        IBook book = plugin.getBook(id);
                         if (book != null)
                             e.getPlayer().getInventory().addItem(book.getItem(e.getPlayer()));
                     });
@@ -60,14 +64,14 @@ public class PlayerListener implements TerminableModule {
                         return;
                     if (!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
                         return;
-                    if (!InteractiveBooksPlugin.getInstance().getConfig().getBoolean("update_books_on_use"))
+                    if (!plugin.getConfig().getBoolean("update_books_on_use"))
                         return;
                     if (!BooksUtils.getItemInMainHand(e.getPlayer()).getType().equals(Material.WRITTEN_BOOK))
                         return;
                     NBTItem nbti = new NBTItem(BooksUtils.getItemInMainHand(e.getPlayer()));
                     if (!nbti.hasKey("InteractiveBooks|Book-Id"))
                         return;
-                    IBook book = InteractiveBooksPlugin.getBook(nbti.getString("InteractiveBooks|Book-Id"));
+                    IBook book = plugin.getBook(nbti.getString("InteractiveBooks|Book-Id"));
                     if (book == null)
                         return;
                     ItemStack bookItem = book.getItem(e.getPlayer());
@@ -80,7 +84,7 @@ public class PlayerListener implements TerminableModule {
                 .handler(e -> {
                     String command = e.getMessage().split(" ", 2)[0].replaceFirst("/", "").toLowerCase();
                     IBook iBook = null;
-                    for (IBook book : InteractiveBooksPlugin.getBooks().values())
+                    for (IBook book : plugin.getBooks())
                         if (book.getOpenCommands().contains(command)) {
                             iBook = book;
                             break;
