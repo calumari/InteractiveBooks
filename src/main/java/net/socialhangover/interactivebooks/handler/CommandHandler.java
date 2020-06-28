@@ -7,6 +7,7 @@ import me.lucko.helper.command.tabcomplete.CompletionSupplier;
 import me.lucko.helper.command.tabcomplete.TabCompleter;
 import me.lucko.helper.terminable.TerminableConsumer;
 import me.lucko.helper.terminable.module.TerminableModule;
+import me.lucko.helper.utils.Players;
 import net.socialhangover.interactivebooks.IBook;
 import net.socialhangover.interactivebooks.InteractiveBooksPlugin;
 import org.bukkit.command.CommandSender;
@@ -37,6 +38,11 @@ public class CommandHandler implements TerminableModule {
 
                     if (root.equalsIgnoreCase("open")) {
                         return completer.at(1, CompletionSupplier.startsWith(getBookIds(c.sender()))).complete(c.args());
+                    }
+
+                    if (root.equalsIgnoreCase("give")) {
+                        return completer.at(1, CompletionSupplier.startsWith(Players::names))
+                                .at(2, CompletionSupplier.startsWith(getBookIds(c.sender()))).complete(c.args());
                     }
 
                     if (root.equalsIgnoreCase("create")) {
@@ -81,6 +87,22 @@ public class CommandHandler implements TerminableModule {
                         } else {
                             c.reply("file name exists?"); // todo locale
                         }
+                        return;
+                    }
+
+                    if (root.equalsIgnoreCase("give")) {
+                        Player player = c.arg(1).parseOrFail(Player.class);
+                        String name = c.arg(2).parse(String.class).orElse(null);
+                        if (name == null) {
+                            c.reply("missing book name"); // todo locale
+                            return;
+                        }
+                        IBook book = plugin.getBook(name);
+                        if (book == null) {
+                            c.reply("missing book"); // todo locale
+                            return;
+                        }
+                        player.getInventory().addItem(book.getTaggedItem(player));
                         return;
                     }
 
