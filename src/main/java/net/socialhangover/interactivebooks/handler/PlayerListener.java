@@ -33,17 +33,17 @@ public class PlayerListener implements TerminableModule {
                     String openBookId;
                     List<String> booksToGiveIds;
                     if (player.hasPlayedBefore()) {
-                        openBookId = plugin.getConfig().getString("open_book_on_join");
-                        booksToGiveIds = plugin.getConfig().getStringList("books_on_join");
+                        openBookId = plugin.getConfig().getString("open-book-on-join");
+                        booksToGiveIds = plugin.getConfig().getStringList("books-on-join");
                     } else {
-                        openBookId = plugin.getConfig().getString("open_book_on_first_join");
-                        booksToGiveIds = plugin.getConfig().getStringList("books_on_first_join");
+                        openBookId = plugin.getConfig().getString("open-book-on-first-join");
+                        booksToGiveIds = plugin.getConfig().getStringList("books-on-first-join");
                     }
 
                     if (openBookId != null && plugin.getBook(openBookId) != null && player.hasPermission("interactivebooks.open." + openBookId)) {
                         IBook book = plugin.getBook(openBookId);
                         if (book != null) {
-                            book.open(e.getPlayer());
+                            book.open(player);
                         }
                     }
 
@@ -60,7 +60,7 @@ public class PlayerListener implements TerminableModule {
                 .filter(e -> e.useItemInHand() != Event.Result.DENY && e.getHand() != null)
                 .filter(e -> e.hasItem() && e.getItem().getType() == Material.WRITTEN_BOOK)
                 .filter(e -> e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)
-                .filter(e -> plugin.getConfig().getBoolean("update_books_on_use"))
+                .filter(e -> plugin.getConfig().getBoolean("update-books-on-use"))
                 .handler(e -> {
                     ItemStack item = e.getItem();
                     NBTItem nbti = new NBTItem(item);
