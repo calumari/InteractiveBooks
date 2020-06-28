@@ -71,9 +71,8 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
         if (config.getBoolean("load-example", true)) {
             File example = new File(folder, "examplebook.yml");
             if (!example.exists()) {
-                createTemplate("example");
+                registerBook(new IBook("examplebook", YamlConfiguration.loadConfiguration(createTemplate("examplebook"))));
             }
-            registerBook(new IBook("example", YamlConfiguration.loadConfiguration(example)));
         }
         loadBookConfigs(folder);
     }
@@ -88,7 +87,7 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
 
     @SneakyThrows
     public File createTemplate(String name) {
-        File folder = new File(getDataFolder(), name);
+        File folder = new File(getRelativeFile("books"), name + ".yml");
         if (folder.exists()) {
             return null;
         }
