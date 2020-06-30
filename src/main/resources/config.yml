@@ -1,3 +1,6 @@
+# Should an example book be created and loaded?
+load-example: true
+
 # Should be books updated every time they are opened?
 update-books-on-use: true
 
