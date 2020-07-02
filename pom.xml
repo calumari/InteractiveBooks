@@ -6,7 +6,7 @@
 
     <groupId>net.socialhangover</groupId>
     <artifactId>interactivebooks</artifactId>
-    <version>1.4.8</version>
+    <version>1.0.0</version>
 
     <name>InteractiveBooks</name>
     <description>Create cool interactive books!</description>
