@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import net.socialhangover.interactivebooks.handler.CommandHandler;
 import net.socialhangover.interactivebooks.handler.PlayerListener;
+import net.socialhangover.interactivebooks.locale.LocaleManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import javax.annotation.Nullable;
@@ -23,6 +24,9 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
     @Getter
     private YamlConfiguration config;
 
+    @Getter
+    private final LocaleManager localeManager = new LocaleManager();
+
     @Override
     protected void enable() {
         reload();
@@ -31,7 +35,7 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
     }
 
     public void reload() {
-        books.clear();
+        this.localeManager.tryLoad(getDataDirectory().resolve("locale.yml"));
         loadAll();
     }
 
@@ -63,6 +67,7 @@ public final class InteractiveBooksPlugin extends ExtendedJavaPlugin {
     }
 
     private void loadAll() {
+        books.clear();
         config = loadConfig("config.yml");
 
         File folder = getRelativeFile("books");

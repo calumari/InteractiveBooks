@@ -1,0 +1,7 @@
+reload: "<green>Locale and config reloaded!"
+no-console: "<red>Only players are able to use this command."
+no-permission: "<red>You are not able to use this command."
+invalid-usage: "<red>&cInvalid usage. Try: {}."
+missing-book: "<red>That book does not exist."
+file-create: "<green>Book created! Use <click:suggest_command:/ibooks reload>/ibooks reload</click> to load it."
+file-exists: "<red>A file already exists with the name '{}'."

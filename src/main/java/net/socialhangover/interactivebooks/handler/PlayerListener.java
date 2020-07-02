@@ -7,6 +7,7 @@ import me.lucko.helper.terminable.TerminableConsumer;
 import me.lucko.helper.terminable.module.TerminableModule;
 import net.socialhangover.interactivebooks.IBook;
 import net.socialhangover.interactivebooks.InteractiveBooksPlugin;
+import net.socialhangover.interactivebooks.locale.Message;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -87,7 +88,7 @@ public class PlayerListener implements TerminableModule {
 
                     Player player = e.getPlayer();
                     if (!book.hasPermission(player)) {
-                        player.sendMessage("you don't have permission"); // todo locale
+                        Message.NO_PERMISSION.send(player, plugin.getLocaleManager());
                         return;
                     }
 

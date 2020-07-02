@@ -10,6 +10,7 @@ import me.lucko.helper.terminable.module.TerminableModule;
 import me.lucko.helper.utils.Players;
 import net.socialhangover.interactivebooks.IBook;
 import net.socialhangover.interactivebooks.InteractiveBooksPlugin;
+import net.socialhangover.interactivebooks.locale.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -61,23 +62,23 @@ public class CommandHandler implements TerminableModule {
 
                     if (root.equalsIgnoreCase("open")) {
                         if (!(sender instanceof Player)) {
-                            c.reply("you must be a player to run this command"); // todo locale
+                            Message.NO_CONSOLE.send(sender, plugin.getLocaleManager());
                             return;
                         }
 
                         if (!sender.hasPermission("interactivebooks.command.open")) {
-                            c.reply("you lack permission to use this command ):"); // todo locale
+                            Message.NO_PERMISSION.send(sender, plugin.getLocaleManager());
                             return;
                         }
 
                         String name = c.arg(1).parse(String.class).orElse(null);
                         if (name == null) {
-                            c.reply("missing book name"); // todo locale
+                            Message.INVALID_USAGE.send(sender, plugin.getLocaleManager(), "/open <name>");
                             return;
                         }
                         IBook book = plugin.getBook(name);
                         if (book == null) {
-                            c.reply("missing book"); // todo locale
+                            Message.MISSING_BOOK.send(sender, plugin.getLocaleManager());
                             return;
                         }
                         book.open((Player) sender);
@@ -85,38 +86,40 @@ public class CommandHandler implements TerminableModule {
 
                     if (root.equalsIgnoreCase("create")) {
                         if (!sender.hasPermission("interactivebooks.command.create")) {
-                            c.reply("you lack permission to use this command ):"); // todo locale
+                            Message.NO_PERMISSION.send(sender, plugin.getLocaleManager());
                             return;
                         }
 
                         String name = c.arg(1).parse(String.class).orElse(null);
                         if (name == null) {
-                            c.reply("missing filename"); // todo locale
+                            Message.INVALID_USAGE.send(sender, plugin.getLocaleManager(), "/create <name>");
                             return;
                         }
-                        if (plugin.createTemplate(name) != null) {
-                            c.reply("file created. use /ibooks reload to load"); // todo locale
-                        } else {
-                            c.reply("file name exists?"); // todo locale
-                        }
+                        (plugin.createTemplate(name) != null ? Message.FILE_CREATE : Message.FILE_EXISTS).send(sender, plugin.getLocaleManager(), name);
                         return;
                     }
 
                     if (root.equalsIgnoreCase("give")) {
                         if (!sender.hasPermission("interactivebooks.command.give")) {
-                            c.reply("you lack permission to use this command ):"); // todo locale
+                            Message.NO_PERMISSION.send(sender, plugin.getLocaleManager());
                             return;
                         }
 
-                        Player player = c.arg(1).parseOrFail(Player.class);
-                        String name = c.arg(2).parse(String.class).orElse(null);
-                        if (name == null) {
-                            c.reply("missing book name"); // todo locale
+                        Player player = c.arg(1).parse(Player.class).orElse(null);
+                        if (player == null) {
+                            Message.INVALID_USAGE.send(sender, plugin.getLocaleManager(), "/give <player> <name>");
                             return;
                         }
+
+                        String name = c.arg(2).parse(String.class).orElse(null);
+                        if (name == null) {
+                            Message.INVALID_USAGE.send(sender, plugin.getLocaleManager(), "/give <player> <name>");
+                            return;
+                        }
+
                         IBook book = plugin.getBook(name);
                         if (book == null) {
-                            c.reply("missing book"); // todo locale
+                            Message.MISSING_BOOK.send(player, plugin.getLocaleManager());
                             return;
                         }
                         player.getInventory().addItem(book.getTaggedItem(player));
@@ -125,12 +128,12 @@ public class CommandHandler implements TerminableModule {
 
                     if (root.equalsIgnoreCase("reload")) {
                         if (!sender.hasPermission("interactivebooks.command.reload")) {
-                            c.reply("you lack permission to use this command ):"); // todo locale
+                            Message.NO_PERMISSION.send(sender, plugin.getLocaleManager());
                             return;
                         }
 
                         plugin.reload();
-                        c.reply("plugin reloaded :)");
+                        Message.RELOAD.send(sender, plugin.getLocaleManager());
                     }
                 })
                 .registerAndBind(consumer, "ibooks", "interactivebooks", "ib");
