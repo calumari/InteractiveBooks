@@ -23,7 +23,7 @@ generation: ORIGINAL
 # Separate multiple commands with a space
 commands: 'examplebook'
 
-chapters:
+pages:
   - |-
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
   - |-

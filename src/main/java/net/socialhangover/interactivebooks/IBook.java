@@ -35,7 +35,7 @@ public class IBook {
     private final String author;
     private final List<String> lore;
     private final BookMeta.Generation generation;
-    private final List<String> chapters;
+    private final List<String> pages;
 
     @Getter
     private final List<String> commands;
@@ -46,7 +46,7 @@ public class IBook {
         this.title = config.getString("title", "");
         this.author = config.getString("author", "");
         this.lore = ImmutableList.copyOf(config.getStringList("lore"));
-        this.chapters = ImmutableList.copyOf(config.getStringList("chapters"));
+        this.pages = ImmutableList.copyOf(config.getStringList("pages"));
         this.generation = Enums.getIfPresent(BookMeta.Generation.class, config.getString("generation", "")).or(BookMeta.Generation.ORIGINAL);
 
         Set<String> commands = new HashSet<>();
@@ -73,8 +73,8 @@ public class IBook {
         meta.setGeneration(generation);
 
         List<BaseComponent[]> pages = new ArrayList<>();
-        for (String chapter : chapters) {
-            pages.add(MiniMessageParser.parseFormat(Text.setPlaceholders(player, chapter)));
+        for (String page : this.pages) {
+            pages.add(MiniMessageParser.parseFormat(Text.setPlaceholders(player, page)));
         }
         meta.spigot().setPages(pages);
         book.setItemMeta(meta);
